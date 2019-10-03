@@ -11,3 +11,6 @@ puts "Dr Hannibal Lecter"
 puts "Norman Bates"
 puts "Joffrey Baratheon"
 puts "The Wicked Witch of the West"
+print "Overall we have "
+print 11
+puts " great students."
