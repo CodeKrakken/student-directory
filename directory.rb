@@ -1,46 +1,59 @@
 # defining methods
+def master_method
+  puts "Enter, retrieve or quit?"
+  command = gets.chomp.downcase
+  case command.chr
+  when "e"
+    input_students
+  when "r"
+    print(@students)
+  when "q"
+    puts "Bye!"
+    $quit = "yes"
+  end
+end
+
 
 def input_students
-  puts "Please enter the names of the students"
-  puts "To finish, just hit return twice"
-  students = []
+  puts "Please enter the names of the students\nTo finish, just hit return twice"
   name = gets.chomp
   
   while !name.empty? do
-    students << {:name => name, :cohort => :november}
-    puts "Now we have #{students.count} student#{"s" unless students.count == 1}."
+    @students << {:name => name, :cohort => :november}
+    puts "Now we have #{@students.count} student#{"s" unless @students.count == 1}."
     name = gets.chomp
   end
-  
-  students
-end
-
-def print_header
-  puts "The Students of Villains Academy"
-  puts "--------------------------------"
 end
 
 def print(students)
-  student_count = 1
-  students.each do |student|
-    puts "#{student_count}. #{student[:name]} (#{student[:cohort]} cohort)"
-    student_count += 1
-  end
-end
-
-def print_footer(names)
-  
-  if names.count == 0 
-    puts "We have no students"
+  if @students.count == 0
+    puts "We have no students."
   else
-    puts "Overall we have #{names.count} great student#{"s" unless names.count == 1}."
+    puts "Please enter initial or leave blank to see all."
+    initial = gets.chomp.downcase
+    student_count = 1
+    
+    students.each do |student|
+      
+      student.each do |k, v|
+         
+        if k == :name && (initial == "" || initial == v[0])
+          puts "#{student_count}. #{student[:name]} (#{student[:cohort]} cohort)"
+          student_count += 1
+        end
+        
+      end
+    
+    end
+  
+    puts "Overall we have #{@students.count} great student#{"s" unless @students.count == 1}."
   end
-
+  
 end
 
 # calling methods
 
-students = input_students
-print_header
-print(students)
-print_footer(students)
+until $quit == "yes" do
+  @students = [] if @students == nil
+  master_method
+end
