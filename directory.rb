@@ -38,23 +38,23 @@ def retrieve(students)
       exclusion = gets.chomp.downcase
     end
     
-    student_count = 1
+    index = 0
+    display_count = 1
     
-    students.each do |student|
+    until students[index] == nil do
       
-      student.each do |k, v|
-         
-        if k == :name && (initial == "" || initial == v[0].downcase)
-          unless (exclusion[0] == "y" && v.length > 12)
-            puts "#{student_count}. #{student[:name]} (#{student[:cohort]} cohort)"
-            student_count += 1
-          end
+      if initial == "" || initial == students[index][:name][0].downcase
+        
+        unless exclusion[0] == "y" && students[index][:name].length > 12
+          puts "#{display_count}. #{students[index][:name]} (#{students[index][:cohort]} cohort)"
+          display_count += 1
         end
         
       end
-    
+      index += 1
+      
     end
-  
+    
     puts "Overall we have #{@students.count} great student#{"s" unless @students.count == 1}."
   end
   
