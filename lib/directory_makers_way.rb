@@ -1,20 +1,24 @@
 def interactive_menu
+  @students = []
   loop do
     @lineWidth = 100
     @cohorts = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December", "no"]
-    @students = [] if @students == nil
-    puts "Enter, add details, retrieve, or quit?"
-    command = gets.gsub!("\n", "").downcase
-    case command.chr
-    when "e"
+    
+    puts "1. Input the students".center(@lineWidth)
+    puts "2. Show the students".center(@lineWidth)
+    puts "9. Exit".center(@lineWidth)
+    selection = gets.chomp
+    case selection
+    when "1"
       input_students
+    when "2"
+      retrieve(@students)
     when "a"
       add_detail
-    when "r"
-      retrieve(@students)
-    when "q"
-      puts " ... be seeing you ..."
-      break
+    when "9"
+      exit
+    else
+      puts "I don't know what you meant, try again"
     end
   end
 end
