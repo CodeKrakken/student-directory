@@ -26,6 +26,9 @@ def process(selection)
     when "3"
       save_students
     when "4"
+      @filename = nil
+      @apology = "not due"
+      specify_filename while (@filename.nil? || !File.exist?(@filename))
       load_students(@filename)
     when "9"
       exit # this will cause the program to terminate
@@ -52,7 +55,7 @@ def input_students
   while !@name.nil? do
   # add the student hash to the array
   @cohort = "no" if @cohort.nil?
-  get_students
+  store_students
   puts "Now we have #{@students.count} students"
   # get another name from the user
   @name, @cohort = STDIN.gets.chomp.split(",")
@@ -61,29 +64,16 @@ end
 
 
 def specify_filename
-  puts "Please specify filename, or blank for default."
-  @filename = gets.chomp
+  sorry = "Sorry, #{@filename} doesn't exist. "
+  please = "Please specify filename, or leave blank for default."
+  puts sorry if @apology == "due"
+  puts please
+  @filename = STDIN.gets.chomp
   @filename = "default.csv" if @filename == ""
-end
-
-
-def load_students(filename)
-  loop do
-    specify_filename
-    if File.exist?(@filename)
-      break
-    else
-      puts "Sorry, #{@filename} doesn't exist."
-    end
+  
+  if !File.exist?(@filename)
+    @apology = "due"
   end
-
-  file = File.open(@filename, "r")
-  file.readlines.each do |line|
-    @name, @cohort = line.chomp.split(",")
-    get_students
-  end
-  file.close
-  puts "Loaded #{@students.count} from #{@filename}"
 end
 
 
@@ -100,7 +90,7 @@ def save_students
 end
 
 
-def get_students
+def store_students
   @students << {name: @name, cohort: @cohort.to_sym}
 end
 
@@ -123,17 +113,30 @@ def print_footer
 end
 
     
-def try_load_students
+def first_run_load
   @filename = ARGV.first
   @filename = "default.csv" if @filename.nil?
-  if File.exist?(@filename)
-    load_students(@filename)
-  else
-    puts "Sorry, #{@filename} doesn't exist."
-    exit
+  
+  if !File.exist?(@filename)
+    @apology = "due"
+    specify_filename while !File.exist?(@filename)
   end
+  
+  load_students(@filename)
 end
 
 
-try_load_students
+def load_students(filename)
+  file = File.open(@filename, "r")
+  new_students = 0
+  file.readlines.each do |line|
+    @name, @cohort = line.chomp.split(",")
+    new_students += 1
+    store_students
+  end
+  puts "Loaded #{new_students} from #{@filename}"
+  file.close
+end
+
+first_run_load
 interactive_menu
