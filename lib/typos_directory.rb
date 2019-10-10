@@ -78,6 +78,7 @@ end
 
 
 def save_students
+  @apology = "not due"
   specify_filename
   file = File.open(@filename, "w")
   @students.each do |student|
