@@ -77,16 +77,17 @@ def specify_filename
 end
 
 
+
 def save_students
   @apology = "not due"
   specify_filename
-  file = File.open(@filename, "w")
-  @students.each do |student|
-    student_data = [student[:name], student[:cohort]]
-    csv_line = student_data.join(",")
-    file.puts csv_line
+  File.open(@filename, "w") do |file|
+    @students.each do |student|
+      student_data = [student[:name], student[:cohort]]
+      csv_line = student_data.join(",")
+      file.puts csv_line
+    end
   end
-  file.close
   puts "Save successful!"
 end
 
@@ -128,15 +129,15 @@ end
 
 
 def load_students(filename)
-  file = File.open(@filename, "r")
-  new_students = 0
-  file.readlines.each do |line|
-    @name, @cohort = line.chomp.split(",")
-    new_students += 1
-    store_students
-  end
+  File.open(@filename, "r") do |file|
+    new_students = 0
+    file.readlines.each do |line|
+      @name, @cohort = line.chomp.split(",")
+      new_students += 1
+      store_students
+    end
   puts "Loaded #{new_students} from #{@filename}"
-  file.close
+  end
 end
 
 first_run_load
