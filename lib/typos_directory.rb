@@ -1,3 +1,4 @@
+require 'csv'
 @students = []
 
 
@@ -28,7 +29,7 @@ def process(selection)
     when "4"
       @filename = nil
       @apology = "not due"
-      specify_filename while (@filename.nil? || !File.exist?(@filename))
+      specify_filename while (@filename.nil? || !File.exist?(@filename)) # replace with CSV command
       load_students(@filename)
     when "9"
       exit # this will cause the program to terminate
@@ -71,7 +72,7 @@ def specify_filename
   @filename = STDIN.gets.chomp
   @filename = "default.csv" if @filename == ""
   
-  if !File.exist?(@filename)
+  if !File.exist?(@filename) # replace with CSV command
     @apology = "due"
   end
 end
@@ -81,7 +82,7 @@ end
 def save_students
   @apology = "not due"
   specify_filename
-  File.open(@filename, "w") do |file|
+  File.open(@filename, "w") do |file| # replace with CSV command
     @students.each do |student|
       student_data = [student[:name], student[:cohort]]
       csv_line = student_data.join(",")
@@ -89,6 +90,17 @@ def save_students
     end
   end
   puts "Save successful!"
+end
+
+
+def load_students(filename)
+  new_students = 0
+  CSV.foreach(@filename) do |line|   
+    @name, @cohort = line
+    new_students += 1
+    store_students
+  end
+  puts "Loaded #{new_students} from #{@filename}"
 end
 
 
@@ -119,26 +131,17 @@ def first_run_load
   @filename = ARGV.first
   @filename = "default.csv" if @filename.nil?
   
-  if !File.exist?(@filename)
+  if !File.exist?(@filename) # replace with CSV command
     @apology = "due"
-    specify_filename while !File.exist?(@filename)
+    specify_filename while !File.exist?(@filename) # replace with CSV command
   end
   
   load_students(@filename)
 end
 
 
-def load_students(filename)
-  File.open(@filename, "r") do |file|
-    new_students = 0
-    file.readlines.each do |line|
-      @name, @cohort = line.chomp.split(",")
-      new_students += 1
-      store_students
-    end
-  puts "Loaded #{new_students} from #{@filename}"
-  end
-end
+
+
 
 first_run_load
 interactive_menu
