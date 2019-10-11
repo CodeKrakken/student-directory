@@ -1,7 +1,3 @@
-require 'csv'
-@students = []
-
-
 def print_menu
     puts "1. Input the students"
     puts "2. Show the students"
@@ -29,7 +25,7 @@ def process(selection)
     when "4"
       @filename = nil
       @apology = "not due"
-      specify_filename while (@filename.nil? || !File.exist?(@filename)) # replace with CSV command
+      specify_filename while (@filename.nil? || !File.exist?(@filename))
       load_students(@filename)
     when "9"
       exit # this will cause the program to terminate
@@ -72,21 +68,19 @@ def specify_filename
   @filename = STDIN.gets.chomp
   @filename = "default.csv" if @filename == ""
   
-  if !File.exist?(@filename) # replace with CSV command
+  if !File.exist?(@filename)
     @apology = "due"
   end
 end
 
 
-
 def save_students
   @apology = "not due"
   specify_filename
-  File.open(@filename, "w") do |file| # replace with CSV command
+  
+  CSV.open(@filename, "wb") do |csv|
     @students.each do |student|
-      student_data = [student[:name], student[:cohort]]
-      csv_line = student_data.join(",")
-      file.puts csv_line
+      csv << [student[:name], student[:cohort]]
     end
   end
   puts "Save successful!"
@@ -131,17 +125,16 @@ def first_run_load
   @filename = ARGV.first
   @filename = "default.csv" if @filename.nil?
   
-  if !File.exist?(@filename) # replace with CSV command
+  if !File.exist?(@filename)
     @apology = "due"
-    specify_filename while !File.exist?(@filename) # replace with CSV command
+    specify_filename while !File.exist?(@filename)
   end
   
   load_students(@filename)
 end
 
 
-
-
-
+require 'csv'
+@students = []
 first_run_load
 interactive_menu
