@@ -90,7 +90,7 @@ def retrieve(students)
     exclusion = ""
     
     until exclusion[0] == "y" || exclusion[0] == "n" do
-      puts "Exclude long names? (yes/no)"
+      puts "Exclude long names?"
       exclusion = gets.gsub!("\n", "").downcase
     end
     
